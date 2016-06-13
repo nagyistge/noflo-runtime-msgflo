@@ -173,7 +173,12 @@ loadAndStartGraph = (loader, graphName, iips, callback) ->
             throw err.error
           , 0
         # Tell Network to start sending IIPs
-        instance.start()
+        instance.network.start (err) ->
+          return callback err if err
+          setTimeout ->
+            do onStarted
+          , 100
+        return
 
       # Components don't have a start callback, we can just go started immediately
       # FIXME: Doing this on instance.network.start callback caused issues with Flowtrace
